@@ -18,21 +18,24 @@ mongoose.connect(config.db.uri);
   and then save it to your Mongo database 
  */
 
-fs.readFile('./listing.json','utf8', function(err,data){
-  var list = JSON.parse(data); 
+fs.readFile('listings.json','utf8', function(err,data){
   if(err){
     throw err;
   }
 
-  for (var i =0; i < list.entries.length; i++){
-    var current = list[i];
-    new Listing(current).save(function(err){
-      if (err)
-        throw err;
-    });
-  }
+  var list = JSON.parse(data);
+  console.log(list);
 
-});
+  list.entries.forEach(function(entry) {
+    var newitem = new Listing(entry);
+
+    newitem.save(function(err){
+      if(err) throw err;
+      console.log(entry.name);
+    });
+  });
+
+}); 
 
 /* 
   Once you've written + run the script, check out your MongoLab database to ensure that 
